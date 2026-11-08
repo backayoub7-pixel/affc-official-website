@@ -57,11 +57,35 @@ const features = [
     href: '#standings',
   },
 ]
-
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const [clans, setClans] = useState<any[]>([])
+  const [clansLoading, setClansLoading] = useState(true)
+  const [clansError, setClansError] = useState(false)
+
+  useEffect(() => {
+    async function loadClans() {
+      const { data, error } = await supabase
+        .from('clans')
+        .select('id, short_name, full_name, logo_url')
+        .eq('is_approved', true)
+        .order('short_name')
+
+      if (error) {
+        setClansError(true)
+      } else {
+        setClans(data ?? [])
+      }
+
+      setClansLoading(false)
+    }
+
+    loadClans()
+  }, [])
+
   const closeMenu = () => setMenuOpen(false)
+
 
   return (
     <div className="site-wrapper" dir="rtl">
