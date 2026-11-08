@@ -217,14 +217,42 @@ function App() {
               <p>الكلانات المنضوية تحت لواء الاتحادية الجزائرية.</p>
             </div>
 
-            <div className="empty-state">
-              <div className="empty-icon">
-                <Users size={34} />
+                        {clansLoading ? (
+              <div className="empty-state">
+                <div className="empty-icon"><Users size={34} /></div>
+                <h3>جارٍ تحميل الكلانات...</h3>
+                <p>نسترجع قائمة الكلانات المعتمدة من قاعدة البيانات.</p>
               </div>
-              <h3>لا توجد كلانات معتمدة للعرض حاليًا</h3>
-              <p>ستظهر هنا قائمة الكلانات فور اعتمادها رسميًا.</p>
-            </div>
-          </div>
+            ) : clansError ? (
+              <div className="empty-state">
+                <div className="empty-icon"><Users size={34} /></div>
+                <h3>تعذر تحميل الكلانات حاليًا</h3>
+                <p>يرجى المحاولة لاحقًا.</p>
+              </div>
+            ) : clans.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon"><Users size={34} /></div>
+                <h3>لا توجد كلانات معتمدة للعرض حاليًا</h3>
+                <p>ستظهر هنا قائمة الكلانات فور اعتمادها رسميًا.</p>
+              </div>
+            ) : (
+              <div className="features-grid">
+                {clans.map((clan) => (
+                  <article className="feature-card" key={clan.id}>
+                    <div className="feature-icon">
+                      {clan.logo_url ? (
+                        <img src={clan.logo_url} alt={clan.short_name} style={{ width: 48, height: 48, objectFit: 'contain' }} />
+                      ) : (
+                        <Shield size={27} />
+                      )}
+                    </div>
+                    <h3>{clan.short_name}</h3>
+                    {clan.full_name && <p>{clan.full_name}</p>}
+                    <span className="feature-link">كلان معتمد رسميًا</span>
+                  </article>
+                ))}
+              </div>
+            )}
         </section>
 
         <section className="competitions-section section-padding" id="competitions">
